@@ -2,7 +2,22 @@
 
 <template>
   <div class="md:h-screen md:w-screen flex flex-col">
-    <div id="nav" class="h-14 w-full bg-zinc-500"></div>
+    <div id="nav" class="h-14 w-full bg-zinc-500">
+      <ul class="h-full w-full flex flex-row justify-around">
+        <li class="headeritem" @click="$router.push('/account')">
+          <span class="h-fit my-auto mx-auto"> Account</span>
+        </li>
+        <li class="headeritem">
+          <span class="h-fit my-auto mx-auto">Download</span>
+        </li>
+        <li class="headeritem">
+          <span class="h-fit my-auto mx-auto">Manual</span>
+        </li>
+        <li class="headeritem">
+          <span class="h-fit my-auto mx-auto">JoinUs</span>
+        </li>
+      </ul>
+    </div>
     <div id="body" class="flex-1 bg-zinc-50 bg-zinc-900 flex box-shadow">
       <article
         class="h-1/2 w-5/6 mx-auto my-auto bg-zinc-700 flex box-inner rounded-xl"

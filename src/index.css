@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer components{
+   .headeritem{
+       @apply w-24 bg-cyan-100 h-full;
+       @apply flex;
+   }
+}

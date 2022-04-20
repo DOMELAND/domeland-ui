@@ -1,12 +1,18 @@
+import AccountPageVue from "@/views/AccountPage.vue";
+import MainSkeletonVue from "@/views/MainSkeleton.vue";
 import { createRouter, createWebHistory } from "vue-router";
-import Skeleton from '@/views/MainSkeleton.vue';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
       name: "home",
-      component: Skeleton,
+      component: MainSkeletonVue,
+    },
+    {
+      path: "/account",
+      name: "account",
+      component: AccountPageVue,
     },
   ],
 });
