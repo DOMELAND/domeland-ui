@@ -1,4 +1,60 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { FormInst } from "naive-ui";
+import { ref } from "vue";
+import { useChainStore } from "@/stores/chainStore";
+import { connectMetaMask } from "@/utils/metamask-tool";
+
+const chain = useChainStore();
+const formValue = ref({
+  userName: "",
+  password: "",
+  repeatPassword: "",
+});
+const formRef = ref<FormInst | null>(null);
+const rules = {
+  userName: {
+    required: true,
+    message: "Please enter username",
+    trigger: "blur",
+  },
+  password: {
+    required: true,
+    message: "Please enter password",
+    trigger: ["blur"],
+  },
+  repeatPassword: {
+    required: true,
+    message: "Please enter the password again",
+    trigger: ["blur"],
+  },
+};
+
+async function connect() {
+  if (!chain.account) {
+    const account = await connectMetaMask();
+    chain.$patch({ account });
+    return account;
+  } else {
+    return chain.account;
+  }
+}
+
+function toRegist(e: MouseEvent) {
+  e.preventDefault();
+  formRef.value?.validate((errors) => {
+    if (!errors) {
+      const { userName, password, repeatPassword } = formValue.value;
+      console.log(userName, password, repeatPassword);
+      connect().then((account) => {
+        console.log(account);
+      });
+    } else {
+      console.log(errors);
+    }
+  });
+}
+</script>
+
 <template>
   <div class="mx-auto w-2/3 h-full flex flex-col bg-stone-900">
     <div id="prompttitle" class="w-full h-1/4 flex">
@@ -9,58 +65,65 @@
     <div id="formcontainer" class="flex-1 flex">
       <div
         id="form"
-        class="w-2/5 h-5/6 bg-stone-800 box-shadow shadow-2xl rounded mx-auto p-8 flex"
+        class="w-2/5 h-5/6 bg-stone-1000 box-shadow shadow-2xl rounded mx-auto p-8 flex"
       >
-        <form class="flex-1 space-y-2">
-          <div id="formtitle" class="mt-20 mb-2 font-bold text-3xl text-white">
+        <n-form
+          class="flex-1 space-y-2"
+          ref="formRef"
+          label-placement="left"
+          :label-width="80"
+          :model="formValue"
+          :rules="rules"
+        >
+          <div id="formtitle" class="mb-2 font-bold text-3xl text-white">
             Enter account details
           </div>
-          <div class="w-full">
-            <input
-              class="w-full rounded-lg focus:ring-1 ring-inset ring-cyan-600 placeholder:text-gray-400"
+          <div class="mb-2 text-white">
+            Address: {{ chain.account || "--" }}
+          </div>
+          <n-form-item label="" path="userName">
+            <n-input
+              v-model:value="formValue.userName"
               placeholder="Username"
-              name=""
-              type="text"
-              value=""
             />
-          </div>
-          <div class="w-full">
-            <input
-              class="w-full rounded-lg focus:ring-1 ring-inset ring-cyan-600 placeholder:text-gray-400"
-              placeholder="Password"
-              name=""
-              type="password"
-              value=""
+          </n-form-item>
+          <n-form-item label="" path="password">
+            <n-input
+              v-model:value="formValue.password"
+              placeholder="password"
             />
-          </div>
-          <div class="w-full">
-            <input
-              class="w-full rounded-lg focus:ring-1 ring-inset ring-cyan-600 placeholder:text-gray-400"
+          </n-form-item>
+          <n-form-item label="" path="repeatPassword">
+            <n-input
+              v-model:value="formValue.repeatPassword"
               placeholder="Repeat password"
-              name=""
-              type="password"
-              value=""
             />
-          </div>
-          <div id="promptfooter" class="h-fit w-full text-white text-lg">
-            <p>
-              Please note, we <span class="font-bold">cannot</span> reset your
-              account if you forget your password. Make sure it's
-              <span
-                class="font-bold text-cyan-600 underline decoration-2 underline-offset-2"
-                >secure</span
-              >
-              and write it down.
-            </p>
-          </div>
-          <div id="submit" class="w-full h-fit">
-            <button class="w-full h-10 bg-cyan-600 flex rounded">
-              <span class="mx-auto my-auto font-bold text-white"
-                >I acknowledge and want to register</span
-              >
-            </button>
-          </div>
-        </form>
+          </n-form-item>
+          <p class="h-fit w-full text-white text-lg">
+            Please note, we <span class="font-bold">cannot</span> reset your
+            account if you forget your password. Make sure it's
+            <span
+              class="
+                font-bold
+                text-cyan-600
+                underline
+                decoration-2
+                underline-offset-2
+              "
+              >secure</span
+            >
+            and write it down.
+          </p>
+          <n-form-item>
+            <n-button
+              class="bg-cyan-600 font-bold text-white"
+              color="#0891b2"
+              @click="toRegist"
+            >
+              I acknowledge and want to register
+            </n-button>
+          </n-form-item>
+        </n-form>
       </div>
     </div>
   </div>

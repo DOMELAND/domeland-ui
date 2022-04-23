@@ -1,6 +1,5 @@
 <script lang="ts">
 import { useChainStore } from "./stores/chainStore";
-import { NMessageProvider } from "naive-ui";
 import MessageToast from "./components/message/message-toast.vue";
 import {
   checkMetaMask,
@@ -9,7 +8,7 @@ import {
 } from "./utils/metamask-tool";
 
 export default {
-  components: { MessageToast, NMessageProvider },
+  components: { MessageToast },
   setup() {
     const chain = useChainStore();
 
