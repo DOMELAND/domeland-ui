@@ -19,7 +19,7 @@ function checkMetaMask() {
  */
 function getChainBalance(account: string) {
   return new Promise((resolve) => {
-    const web3 = new Web3(window.ethereum);
+    const web3 = new window.Web3(window.ethereum);
     web3.eth.getBalance(account).then((res) => {
       const balance = web3.utils.fromWei(res);
       console.log("balance", balance);

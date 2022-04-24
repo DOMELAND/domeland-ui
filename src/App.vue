@@ -1,6 +1,6 @@
 <script lang="ts">
-import { useChainStore } from "./stores/chainStore";
-import MessageToast from "./components/message/message-toast.vue";
+import { useChainStore } from "@/stores/chainStore";
+import MessageToast from "@/components/message/message-toast.vue";
 import {
   checkMetaMask,
   changeChainAccount,

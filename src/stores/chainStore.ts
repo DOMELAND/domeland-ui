@@ -1,12 +1,16 @@
-import { ref } from "vue";
 import { defineStore } from "pinia";
 
-export const useChainStore = defineStore("chain", function () {
-  const account = ref("");
-  const balance = ref("");
-
-  return {
-    account,
-    balance,
-  };
+export const useChainStore = defineStore("chain", {
+  state: () => {
+    return { account: "", balance: "" };
+  },
+  persist: {
+    enabled: true,
+    // strategies: [
+    //   {
+    //     paths: [], // 指定要持久化的数据，默认全部
+    //     storage: localStorage, // 保存位置，默认保存在sessionStorage
+    //   },
+    // ],
+  },
 });
