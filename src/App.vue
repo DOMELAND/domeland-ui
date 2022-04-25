@@ -18,8 +18,12 @@ export default {
     if (isMetaMask) {
       changeChainAccount().then(async (account: string) => {
         chain.$patch({ account });
-        const balance = await getChainBalance(account);
-        chain.$patch({ balance });
+        if (account) {
+          const balance = await getChainBalance(account);
+          chain.$patch({ balance });
+        } else {
+          chain.$patch({ balance: "" });
+        }
       });
     }
   },

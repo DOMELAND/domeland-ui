@@ -5,7 +5,7 @@
 function checkMetaMask() {
   const { ethereum } = window;
   if (ethereum && ethereum.isMetaMask) {
-    console.log("Metamask enabled");
+    console.info("Metamask enabled");
     return true;
   } else {
     window.$message.warning("Please install metamask");
@@ -22,7 +22,6 @@ function getChainBalance(account: string) {
     const web3 = new window.Web3(window.ethereum);
     web3.eth.getBalance(account).then((res) => {
       const balance = web3.utils.fromWei(res);
-      console.log("balance", balance);
       resolve(balance);
     });
   });
@@ -34,11 +33,11 @@ function getChainBalance(account: string) {
 function changeChainAccount() {
   return new Promise((resolve) => {
     window.ethereum.on("accountsChanged", (accounts: [string]) => {
-      console.log(accounts[0]);
       if (accounts[0]) {
         resolve(accounts[0]);
       } else {
         window.$message.warning("Please connect to MetaMask");
+        resolve("");
       }
     });
   });

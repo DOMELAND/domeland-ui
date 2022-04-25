@@ -4,4 +4,5 @@ interface Window {
   ethereum: any;
   $message: any;
   Web3: any;
+  "web3-token": any;
 }

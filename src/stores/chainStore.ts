@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 export const useChainStore = defineStore("chain", {
   state: () => {
-    return { account: "", balance: "" };
+    return { account: "", balance: "", token: "" };
   },
   persist: {
     enabled: true,

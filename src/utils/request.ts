@@ -1,15 +1,18 @@
 import axios from "axios";
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import { useChainStore } from "@/stores/chainStore";
 
 const service: AxiosInstance = axios.create({
-  // baseURL: process.env.BASE_API, // api 的 base_url
-  baseURL: "/api",
+  baseURL: "/web3",
   timeout: 10000,
 });
 
 // request interceptor
 service.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  async (config: AxiosRequestConfig) => {
+    const chain = useChainStore();
+    const web3token = chain.token;
+    config.headers.Authorization = web3token;
     return config;
   },
   (error) => {
@@ -23,10 +26,12 @@ service.interceptors.response.use(
     return response.data;
   },
   (error) => {
-    if (error.response.status == 403) {
-      window.$message.error(`Error: ${error.response.status}`);
+    const response = error.response;
+    if (response.status == 403) {
+      window.$message.error(`Error: ${response.status}`);
     } else {
-      window.$message.error(`Error`);
+      const msg = response.data.message || "Error";
+      window.$message.error(msg);
     }
     return Promise.reject(error);
   }
