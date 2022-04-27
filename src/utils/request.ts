@@ -12,7 +12,7 @@ service.interceptors.request.use(
   async (config: AxiosRequestConfig) => {
     const chain = useChainStore();
     const web3token = chain.token;
-    config.headers.Authorization = web3token;
+    config.headers.authorization = web3token;
     return config;
   },
   (error) => {

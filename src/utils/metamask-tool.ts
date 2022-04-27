@@ -32,7 +32,7 @@ function getChainBalance(account: string) {
  */
 function changeChainAccount() {
   return new Promise((resolve) => {
-    window.ethereum.on("accountsChanged", (accounts: [string]) => {
+    window.ethereum.on("accountsChanged", (accounts: Array<string>) => {
       if (accounts[0]) {
         resolve(accounts[0]);
       } else {
@@ -50,7 +50,7 @@ function connectMetaMask() {
   return new Promise((resolve, reject) => {
     window.ethereum
       .request({ method: "eth_requestAccounts" })
-      .then((accounts: [string]) => {
+      .then((accounts: Array<string>) => {
         if (!accounts.length) {
           window.$message.warning("Please connect to MetaMask.");
           reject();

@@ -1,31 +1,23 @@
-<script lang="ts" setup>
-import { FormInst, FormRules } from "naive-ui";
+<script setup lang="ts">
 import { ref } from "vue";
+import { FormInst, FormRules } from "naive-ui";
 import { useChainStore } from "@/stores/chainStore";
 import { connectMetaMask } from "@/utils/metamask-tool";
 import createToken from "@/utils/web3-token";
-import { register } from "@/api/userApi";
-import ChangePwd from "./changePwd.vue";
+import { changePwd } from "@/api/userApi";
 
+const props = defineProps({ show: Boolean });
+const emit = defineEmits(["closeClick"]);
 const chain = useChainStore();
 const formValue = ref({
-  userName: "",
   password: "",
   repeatPassword: "",
 });
 const formRef = ref<FormInst | null>(null);
-const showModal = ref(false);
 function validatePasswordSame(rule, value): boolean {
   return value === formValue.value.password;
 }
 const rules: FormRules = {
-  userName: [
-    {
-      required: true,
-      message: "Please enter username",
-      trigger: "blur",
-    },
-  ],
   password: [
     {
       required: true,
@@ -57,27 +49,33 @@ async function isConnect() {
   }
 }
 
+function closableModal() {
+  emit("closeClick", props.show);
+  formValue.value = {
+    password: "",
+    repeatPassword: "",
+  };
+}
+
 /**
  * Form validate
  * Connect Metamask
  * Make Token
- * Regist request
+ * ChangePassword request
  */
-function toRegist(e: MouseEvent) {
-  e.preventDefault();
+function changePwdConfirm() {
   formRef.value?.validate((errors) => {
     if (!errors) {
-      const { userName, password } = formValue.value;
+      const { password } = formValue.value;
       isConnect().then(async (account) => {
         await createToken();
         const param = {
-          username: userName,
           password: password,
           ethaddr: account,
         };
 
-        register(param).then((res) => {
-          // TODO success callback
+        changePwd(param).then((res) => {
+          closableModal();
         });
       });
     } else {
@@ -85,27 +83,22 @@ function toRegist(e: MouseEvent) {
     }
   });
 }
-
-function showChangePwdModel() {
-  showModal.value = true;
-}
-
-function closeModal() {
-  showModal.value = false;
-}
 </script>
 
 <template>
-  <div class="mx-auto w-2/3 h-full flex flex-col bg-stone-900">
-    <div id="prompttitle" class="w-full h-1/4 flex">
-      <span class="text-white text-5xl font-bold my-auto mx-auto">
-        Register an account to play online!
-      </span>
-    </div>
-    <div id="formcontainer">
-      <div
-        id="form"
-        class="w-2/5 bg-stone-900 px-4 box-shadow shadow-2xl rounded mx-auto"
+  <div>
+    <n-modal v-model:show="props.show" :mask-closable="false">
+      <n-card
+        class="w-2/5"
+        title="Reset password"
+        :bordered="false"
+        size="huge"
+        role="dialog"
+        closable
+        :segmented="{
+          content: true,
+        }"
+        :on-close="closableModal"
       >
         <n-form
           ref="formRef"
@@ -114,16 +107,11 @@ function closeModal() {
           :model="formValue"
           :rules="rules"
         >
-          <div class="mb-2 text-white">
+          <div class="mb-4">
             <label class="font-bold">Address: </label
             >{{ chain.account || "--" }}
           </div>
-          <n-form-item label="" path="userName">
-            <n-input
-              v-model:value="formValue.userName"
-              placeholder="Username"
-            />
-          </n-form-item>
+
           <n-form-item label="" path="password">
             <n-input
               v-model:value="formValue.password"
@@ -136,26 +124,28 @@ function closeModal() {
               placeholder="Repeat password"
             />
           </n-form-item>
-          <p
-            class="h-fit w-full mt-0 mb-3 text-white text-right text-cyan-600 cursor-pointer"
-            @click="showChangePwdModel"
-          >
-            Forgot your password?
-          </p>
-          <n-form-item>
-            <n-button
-              class="w-full bg-cyan-600 font-bold text-white"
-              color="#0891b2"
-              @click="toRegist"
-            >
-              Sign up
-            </n-button>
-          </n-form-item>
         </n-form>
-      </div>
-    </div>
-
-    <ChangePwd :show="showModal" @closeClick="closeModal" />
+        <template #footer>
+          <div class="text-center">
+            <n-button
+              class="bg-cyan-600 font-bold text-white"
+              color="#0891b2"
+              @click="closableModal"
+            >
+              Cancel
+            </n-button>
+            <n-button
+              class="bg-cyan-600 font-bold ml-10 text-white"
+              color="#0891b2"
+              @click="changePwdConfirm"
+            >
+              Confirm
+            </n-button>
+          </div>
+        </template>
+      </n-card>
+    </n-modal>
   </div>
 </template>
+
 <style scoped></style>
