@@ -2,8 +2,10 @@ import axios from "axios";
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { useChainStore } from "@/stores/chainStore";
 
+const BASEURL = import.meta.env.VITE_API_BASEURL;
+
 const service: AxiosInstance = axios.create({
-  baseURL: "/web3",
+  baseURL: BASEURL,
   timeout: 10000,
 });
 

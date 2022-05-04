@@ -6,3 +6,11 @@ interface Window {
   Web3: any;
   "web3-token": any;
 }
+
+interface ImportMetaEnv {
+  readonly VITE_API_BASEURL: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
