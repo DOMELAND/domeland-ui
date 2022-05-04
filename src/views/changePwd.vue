@@ -116,12 +116,14 @@ function changePwdConfirm() {
             <n-input
               v-model:value="formValue.password"
               placeholder="password"
+              type="password"
             />
           </n-form-item>
           <n-form-item label="" path="repeatPassword">
             <n-input
               v-model:value="formValue.repeatPassword"
               placeholder="Repeat password"
+              type="password"
             />
           </n-form-item>
         </n-form>

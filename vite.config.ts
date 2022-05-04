@@ -15,8 +15,8 @@ export default defineConfig({
   server: {
     proxy: {
       "^/web3": {
-        target: "http://gw.321.io:19253",
-        // target: "http://localhost:8082",
+        // target: "http://gw.321.io:19253",
+        target: "http://localhost:8082",
         changeOrigin: true,
         // rewrite: (path) => path.replace(/^\/web3/, ""),
       },
